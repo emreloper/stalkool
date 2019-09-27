@@ -1,0 +1,15 @@
+.root {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  color: var(--color-black);
+  background-color: var(--color-grey-100);
+}
+
+.align-center {
+  align-items: center;
+}

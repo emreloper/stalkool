@@ -1,0 +1,363 @@
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Stage:
+    Type: String
+    Default: development
+    AllowedValues:
+      - development
+      - production
+  DomainName:
+    Type: String
+
+Mappings:
+  DefaultTTLMap:
+    development:
+      Default: 0
+      InstagramPost: 0
+      InstagramProfile: 0
+      InstagramIGTV: 0
+      InstagramHashtag: 0
+      InstagramLocation: 0
+      InstagramProfileLoadMore: 0
+      InstagramHashtagLoadMore: 0
+    production:
+      Default: 86400
+      InstagramPost: 86400
+      InstagramProfile: 86400
+      InstagramIGTV: 86400
+      InstagramHashtag: 86400
+      InstagramLocation: 86400
+      InstagramProfileLoadMore: 86400
+      InstagramHashtagLoadMore: 86400
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: nodejs10.x
+    MemorySize: 512
+    Timeout: 5
+    AutoPublishAlias: production
+
+Resources:
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+
+  RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HostedZone
+      RecordSets:
+        - AliasTarget:
+            DNSName: !GetAtt CFDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+          Name: !Sub www.${DomainName}
+          Type: A
+        - AliasTarget:
+            DNSName: !GetAtt CFDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+          Name: !Sub www.${DomainName}
+          Type: AAAA
+        - AliasTarget:
+            DNSName: !GetAtt CFRedirectDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+          Name: !Ref DomainName
+          Type: A
+        - AliasTarget:
+            DNSName: !GetAtt CFRedirectDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2
+          Name: !Ref DomainName
+          Type: AAAA
+
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub '*.${DomainName}'
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          ValidationDomain: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Ref DomainName
+        - !Sub '*.${DomainName}'
+      ValidationMethod: DNS
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          Effect: Allow
+          Principal: '*'
+          Action:
+            - s3:GetObject
+          Resource: !Sub
+            - ${BUCKET}/*
+            - BUCKET: !GetAtt S3Bucket.Arn
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      BucketName: !Sub www.${DomainName}
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  S3RedirectBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DomainName
+      WebsiteConfiguration:
+        RedirectAllRequestsTo:
+          HostName: !Sub www.${DomainName}
+          Protocol: https
+
+  S3LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub www.${DomainName}-access-logs
+
+  CFDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Sub www.${DomainName}
+        DefaultCacheBehavior:
+          Compress: true
+          DefaultTTL: !FindInMap
+            - DefaultTTLMap
+            - !Ref Stage
+            - Default
+          ForwardedValues:
+            QueryString: false
+          LambdaFunctionAssociations:
+            - EventType: origin-request
+              LambdaFunctionARN: !Ref DefaultLambda.Version
+          TargetOriginId: CFS3Bucket
+          ViewerProtocolPolicy: redirect-to-https
+        CacheBehaviors:
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramPost
+            ForwardedValues:
+              QueryString: false
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramPost.Version
+            PathPattern: /instagram/post/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramIGTV
+            ForwardedValues:
+              QueryString: false
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramIGTV.Version
+            PathPattern: /instagram/profile/*/igtv/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramProfile
+            ForwardedValues:
+              QueryString: false
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramProfile.Version
+            PathPattern: /instagram/profile/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramHashtag
+            ForwardedValues:
+              Headers:
+                - Accept-Encoding
+              QueryString: false
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramHashtag.Version
+            PathPattern: /instagram/hashtag/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramLocation
+            ForwardedValues:
+              QueryString: false
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramLocation.Version
+            PathPattern: /instagram/location/*/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramProfileLoadMore
+            ForwardedValues:
+              QueryString: true
+              QueryStringCacheKeys:
+                - after
+                - first
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramProfileLoadMore.Version
+            PathPattern: /api/instagram/profile/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+          - Compress: true
+            DefaultTTL: !FindInMap
+              - DefaultTTLMap
+              - !Ref Stage
+              - InstagramHashtagLoadMore
+            ForwardedValues:
+              QueryString: true
+              QueryStringCacheKeys:
+                - after
+                - first
+            LambdaFunctionAssociations:
+              - EventType: origin-request
+                LambdaFunctionARN: !Ref InstagramHashtagLoadMore.Version
+            PathPattern: /api/instagram/hashtag/*/
+            TargetOriginId: CFS3Bucket
+            ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        Logging:
+          Bucket: !GetAtt S3LogBucket.DomainName
+          IncludeCookies: false
+          Prefix: ''
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            Id: CFS3Bucket
+            DomainName: !Select
+              - 1
+              - !Split
+                - //
+                - !GetAtt S3Bucket.WebsiteURL
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          MinimumProtocolVersion: TLSv1.1_2016
+          SslSupportMethod: sni-only
+
+  CFRedirectDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: CFS3RedirectBucket
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            Id: CFS3RedirectBucket
+            DomainName: !Select
+              - 1
+              - !Split
+                - //
+                - !GetAtt S3RedirectBucket.WebsiteURL
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          MinimumProtocolVersion: TLSv1.1_2016
+          SslSupportMethod: sni-only
+
+  DefaultLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/default-lambda
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramIGTV:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-igtv
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramPost:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-post
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramProfile:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-profile
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramHashtag:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-hashtag
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramLocation:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-location
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+  InstagramProfileLoadMore:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-profile-load-more
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+      MemorySize: 128
+  InstagramHashtagLoadMore:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/instagram-hashtag-load-more
+      Role: !GetAtt LambdaEdgeFunctionRole.Arn
+      MemorySize: 128
+
+  LambdaEdgeFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowLambdaServiceToAssumeRole
+            Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - edgelambda.amazonaws.com
+
+Outputs:
+  S3WebsiteUrl:
+    Value: !GetAtt S3Bucket.WebsiteURL
+  S3RedirectWebsiteUrl:
+    Value: !GetAtt S3RedirectBucket.WebsiteURL
+  CFDomainName:
+    Value: !GetAtt CFDistribution.DomainName
+  CFRedirectDomainName:
+    Value: !GetAtt CFRedirectDistribution.DomainName
+  NameServers:
+    Value: !Join
+      - ', '
+      - !GetAtt HostedZone.NameServers

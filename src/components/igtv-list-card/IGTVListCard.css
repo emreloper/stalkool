@@ -1,0 +1,19 @@
+.media-icon {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  color: var(--color-white);
+}
+
+.body {
+  flex: auto;
+}
+
+.likes-and-comments {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action {
+  margin-left: calc(var(--space-2) * -1);
+}

@@ -1,0 +1,28 @@
+.root {
+  background-color: var(--color-primary);
+  z-index: var(--z-index-4);
+}
+
+.position-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.position-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+.elevation-0 {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.elevation-1 {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.elevation-4 {
+  box-shadow: var(--elevation-4);
+}

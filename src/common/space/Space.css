@@ -1,0 +1,83 @@
+.width-1 {
+  width: var(--space-1);
+  min-width: var(--space-1);
+  max-width: var(--space-1);
+  min-height: 1px;
+}
+
+.width-2 {
+  width: var(--space-2);
+  min-width: var(--space-2);
+  max-width: var(--space-2);
+  min-height: 1px;
+}
+
+.width-3 {
+  width: var(--space-3);
+  min-width: var(--space-3);
+  max-width: var(--space-3);
+  min-height: 1px;
+}
+
+.width-4 {
+  width: var(--space-4);
+  min-width: var(--space-4);
+  max-width: var(--space-4);
+  min-height: 1px;
+}
+
+.width-5 {
+  width: var(--space-5);
+  min-width: var(--space-5);
+  max-width: var(--space-5);
+  min-height: 1px;
+}
+
+.width-6 {
+  width: var(--space-6);
+  min-width: var(--space-6);
+  max-width: var(--space-6);
+  min-height: 1px;
+}
+
+.height-1 {
+  min-width: 1px;
+  height: var(--space-1);
+  min-height: var(--space-1);
+  max-height: var(--space-1);
+}
+
+.height-2 {
+  min-width: 1px;
+  height: var(--space-2);
+  min-height: var(--space-2);
+  max-height: var(--space-2);
+}
+
+.height-3 {
+  min-width: 1px;
+  height: var(--space-3);
+  min-height: var(--space-3);
+  max-height: var(--space-3);
+}
+
+.height-4 {
+  min-width: 1px;
+  height: var(--space-4);
+  min-height: var(--space-4);
+  max-height: var(--space-4);
+}
+
+.height-5 {
+  min-width: 1px;
+  height: var(--space-5);
+  min-height: var(--space-5);
+  max-height: var(--space-5);
+}
+
+.height-6 {
+  min-width: 1px;
+  height: var(--space-6);
+  min-height: var(--space-6);
+  max-height: var(--space-6);
+}

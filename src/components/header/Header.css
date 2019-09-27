@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+}
+
+.menu-button {
+  margin-right: var(--space-4);
+}
+
+.search-button {
+  margin-left: auto;
+}

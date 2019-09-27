@@ -1,0 +1,30 @@
+.article {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: var(--space-4);
+}
+
+.avatar {
+  composes: root from '../../common/avatar/Avatar.css';
+  width: 5rem;
+  height: 5rem;
+}
+
+.header {
+  align-self: center;
+}
+
+.section {
+  grid-column: span 2;
+}
+
+@media (--media-sm) {
+  .article {
+    grid-template-columns: 10rem 1fr;
+  }
+
+  .avatar {
+    width: 10rem;
+    height: 10rem;
+  }
+}

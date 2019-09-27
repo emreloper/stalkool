@@ -1,0 +1,137 @@
+.root {
+  margin: 0;
+
+  & p {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+  }
+}
+
+.variant-h1 {
+  font-size: var(--font-size-10);
+  font-weight: var(--font-weight-light);
+  line-height: 7.5rem;
+}
+
+.variant-h2 {
+  font-size: var(--font-size-9);
+  font-weight: var(--font-weight-light);
+  line-height: 4.5rem;
+}
+
+.variant-h3 {
+  font-size: var(--font-size-8);
+  font-weight: var(--font-weight-regular);
+  line-height: 4.5rem;
+}
+
+.variant-h4 {
+  font-size: var(--font-size-7);
+  font-weight: var(--font-weight-regular);
+  line-height: 3rem;
+}
+
+.variant-h5 {
+  font-size: var(--font-size-6);
+  font-weight: var(--font-weight-regular);
+  line-height: 2rem;
+}
+
+.variant-h6 {
+  font-size: var(--font-size-5);
+  font-weight: var(--font-weight-medium);
+  line-height: 2rem;
+}
+
+.variant-subtitle1 {
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5rem;
+}
+
+.variant-subtitle2 {
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5rem;
+}
+
+.variant-body1 {
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5rem;
+}
+
+.variant-body2 {
+  font-size: var(--font-size-3);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5rem;
+}
+
+.variant-caption {
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5rem;
+}
+
+.variant-overline {
+  font-size: var(--font-size-1);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5rem;
+}
+
+.weight-light {
+  font-weight: var(--font-weight-light);
+}
+
+.weight-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+.weight-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.color-white {
+  color: var(--color-white);
+}
+
+.color-primary {
+  color: var(--text-color-primary);
+}
+
+.color-secondary {
+  color: var(--text-color-secondary);
+}
+
+.align-center {
+  text-align: center;
+}
+
+.nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clamp-3,
+.clamp-5 {
+  display: -webkit-box;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  visibility: visible;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.clamp-5 {
+  -webkit-line-clamp: 5;
+}
+
+.wordBreak {
+  word-break: break-word;
+}

@@ -1,0 +1,17 @@
+.root {
+  display: grid;
+  gap: var(--space-5);
+  grid-auto-columns: 100%;
+}
+
+@media (--media-sm) {
+  .columns-sm-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (--media-md) {
+  .columns-md-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

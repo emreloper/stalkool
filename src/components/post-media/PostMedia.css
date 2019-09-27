@@ -1,0 +1,55 @@
+.carousel-container {
+  position: relative;
+}
+
+.carousel-buttons-container {
+  position: absolute;
+  right: 0;
+  bottom: var(--space-4);
+  left: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-button {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  margin-right: var(--space-1);
+  margin-left: var(--space-1);
+  border: 0;
+  border-radius: 50%;
+  opacity: 0.4;
+  background-color: var(--color-white);
+  appearance: none;
+}
+
+.carousel-button--is-active {
+  opacity: 1;
+}
+
+.video-container {
+  position: relative;
+}
+
+.play-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  appearance: none;
+}
+
+.play-icon {
+  font-size: 8rem;
+  color: var(--color-white);
+}

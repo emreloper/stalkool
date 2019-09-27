@@ -1,0 +1,16 @@
+.username-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

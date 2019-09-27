@@ -1,0 +1,8 @@
+.root {
+  display: none;
+
+  &[option][selected] {
+    display: block;
+    outline: 0;
+  }
+}

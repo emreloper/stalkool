@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-4);
+  line-height: 1.5rem;
+  color: var(--text-color-primary);
+  background-color: var(--color-grey-50);
+}

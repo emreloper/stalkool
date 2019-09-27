@@ -1,0 +1,3 @@
+.top-app-bar-container {
+  composes: container from '../header/Header.css';
+}

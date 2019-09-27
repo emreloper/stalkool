@@ -1,0 +1,52 @@
+.root {
+  display: block;
+  height: 1px;
+  margin: 0;
+  border: 0;
+}
+
+.color-border {
+  background-color: var(--color-border);
+}
+
+.color-grey-50 {
+  background-color: var(--color-grey-50);
+}
+
+.color-grey-100 {
+  background-color: var(--color-grey-100);
+}
+
+.color-grey-200 {
+  background-color: var(--color-grey-200);
+}
+
+.color-grey-300 {
+  background-color: var(--color-grey-300);
+}
+
+.color-grey-400 {
+  background-color: var(--color-grey-400);
+}
+
+.color-grey-500 {
+  background-color: var(--color-grey-500);
+}
+
+.removeGutter {
+  margin-right: calc(var(--space-4) * -1);
+  margin-left: calc(var(--space-4) * -1);
+}
+
+@media (--media-sm) {
+  .removeGutter {
+    margin-right: calc(var(--space-5) * -1);
+    margin-left: calc(var(--space-5) * -1);
+  }
+}
+
+@media (--media-md) {
+  .removeGutter {
+    margin: 0;
+  }
+}

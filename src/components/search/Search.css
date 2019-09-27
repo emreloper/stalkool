@@ -1,0 +1,35 @@
+.lightbox-fill-content {
+  z-index: var(--z-index-24);
+  background-color: var(--color-grey-50);
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 100vh;
+    padding-top: 3.5rem;
+    background-color: var(--color-white);
+  }
+}
+
+.top-app-bar-container {
+  display: flex;
+  align-items: center;
+}
+
+.tabs-container {
+  margin-right: calc(var(--space-4) * -1);
+  margin-left: calc(var(--space-4) * -1);
+}
+
+.verified-username {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+@media (--media-sm) {
+  .tabs-container {
+    margin: 0;
+  }
+}

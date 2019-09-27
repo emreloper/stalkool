@@ -1,0 +1,27 @@
+.root {
+  display: inline-flex;
+  flex: auto;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-3);
+  text-align: center;
+  text-decoration: none;
+  color: rgba(25, 25, 25, 0.6);
+  background-color: var(--color-white);
+  appearance: none;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &.active,
+  &[option][selected] {
+    border-bottom: 2px solid var(--color-secondary);
+    outline: 0;
+    color: var(--color-secondary);
+  }
+}

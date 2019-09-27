@@ -20,11 +20,14 @@
     "css-loader": "^2.1.1",
     "date-fns": "^2.0.0",
     "express": "^4.17.1",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.4.0",
     "lodash-es": "^4.17.15",
     "mini-css-extract-plugin": "^0.7.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
+    "prettier": "^1.18.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-helmet": "^6.0.0-beta",
@@ -32,10 +35,22 @@
     "terser-webpack-plugin": "^1.4.1",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.7",
-    "webpack-dev-middleware": "^3.7.0"
+    "webpack-dev-middleware": "^3.7.0",
+    "write-file-webpack-plugin": "^4.5.1"
   },
   "dependencies": {
     "instagram-web-api-client": "github:emreloper/instagram-web-api-client",
     "source-map-support": "^0.5.13"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

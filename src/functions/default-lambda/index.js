@@ -10,7 +10,7 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsAndConditions from './TermsAndConditions';
 
 const css = fs.readFileSync(path.resolve(__dirname, 'index.css'), {
-  encoding: 'utf8'
+  encoding: 'utf8',
 });
 
 export async function handler(event) {
@@ -22,6 +22,18 @@ export async function handler(event) {
     request.uri.endsWith('/') === false
   ) {
     return redirectWithEndSlash(request);
+  }
+
+  switch (true) {
+    case request.uri.substring(1).startsWith('hashtag'):
+      redirectWithEndSlash({ ...request, uri: '/instagram' + request.uri });
+      break;
+    case request.uri.substring(1).startsWith('user'):
+      redirectWithEndSlash({
+        ...request,
+        uri: '/instagram/profile/' + request.uri.substring(5),
+      });
+      break;
   }
 
   switch (request.uri) {
@@ -44,10 +56,10 @@ function redirect(location) {
       location: [
         {
           key: 'Location',
-          value: location
-        }
-      ]
-    }
+          value: location,
+        },
+      ],
+    },
   };
 }
 
@@ -70,11 +82,11 @@ function render(Component) {
         'content-type': [
           {
             key: 'Content-Type',
-            value: 'text/html'
-          }
-        ]
+            value: 'text/html',
+          },
+        ],
       },
-      body
+      body,
     };
   } catch (err) {
     console.error(err);
@@ -88,11 +100,11 @@ function render(Component) {
         'content-type': [
           {
             key: 'Content-Type',
-            value: 'text/html'
-          }
-        ]
+            value: 'text/html',
+          },
+        ],
       },
-      body
+      body,
     };
   }
 }

@@ -1,4 +1,4 @@
-# stalkook
+# stalkool
 
 An experimental Instagram web client built with Google AMP and React.
 

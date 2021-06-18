@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
-const requireFromString = require('require-from-string');
+const NodeOutputFileSystem = require('webpack/lib/node/NodeOutputFileSystem');
 
 const webpackConfig = require('./webpack.config');
 
@@ -10,30 +10,33 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const compiler = webpack(webpackConfig);
 
-const fixtures = {
-  home: {},
-  profile: require('./src/profile/Profile.fixture.json').graphql,
-  post: require('./src/post/Post.fixture.json').data
-};
-
-app.use(webpackDevMiddleware(compiler, { serverSideRender: true }));
+app.use(
+  webpackDevMiddleware(compiler, {
+    fs: new NodeOutputFileSystem(),
+    serverSideRender: true,
+  })
+);
 
 app.use(express.static(path.resolve(__dirname, 'public')));
-app.get('*', (req, res) => {
-  const fs = res.locals.fs;
-  const page = req.path.split('/')[2] || 'home';
-  const outputPath = res.locals.webpackStats.toJson().outputPath;
-  const assets = res.locals.webpackStats.toJson().assetsByChunkName[page];
+app.get('*', async (req, res) => {
+  const event = {
+    Records: [
+      {
+        cf: {
+          request: {
+            uri: req.path,
+          },
+        },
+      },
+    ],
+  };
 
-  const cssFile = assets.find(path => path.endsWith('.css'));
-  const jsFile = assets.find(path => path.endsWith('.js'));
+  const page = req.path.split('/')[2];
+  const lambda = page ? 'instagram-' + page : 'default-lambda';
+  const { handler } = require(`./build/${lambda}/index.js`);
+  const response = await handler(event);
 
-  const css = fs.readFileSync(outputPath + '/' + cssFile, 'utf8');
-  const render = requireFromString(
-    fs.readFileSync(outputPath + '/' + jsFile, 'utf8')
-  ).default;
-
-  res.send(render(css, fixtures[page]));
+  res.send(response.body);
 });
 
 app.listen(PORT, () => {
